@@ -1,8 +1,9 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Microwave.Test.Integration
 {
-    public class Tests
+    [TestFixture]
+    public class Test
     {
         [SetUp]
         public void Setup()
@@ -10,7 +11,7 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void Test1()
+        public void PassableTest()
         {
             Assert.Pass();
         }
