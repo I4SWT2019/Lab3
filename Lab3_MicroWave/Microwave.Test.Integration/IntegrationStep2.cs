@@ -49,12 +49,33 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void SetPower__DoorOpened_LightOn()
+        public void OnPowerPressed_OnStartPressed__LightOff()
         {
             powerButton.Press();
-            door.Open();
+            startCancelButton.Press();
+
+            output.Received(1).OutputLine("Light is turned off");
+        }
+
+        [Test]
+        public void OnPowerPressed_OnTimePressed_OnStartPressed__LightOn()
+        {
+            powerButton.Press();
+            timeButton.Press();
+            startCancelButton.Press();
 
             output.Received(1).OutputLine("Light is turned on");
+        }
+
+        [Test]
+        public void OnPowerPressed_OnTimePressed_OnStartPressed_OnCancelPressed__LightOff()
+        {
+            powerButton.Press();
+            timeButton.Press();
+            startCancelButton.Press();
+            startCancelButton.Press();
+
+            output.Received(1).OutputLine("Light is turned off");
         }
     }
 }
