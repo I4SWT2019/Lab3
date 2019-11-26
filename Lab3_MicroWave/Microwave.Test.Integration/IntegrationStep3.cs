@@ -35,7 +35,7 @@ namespace Microwave.Test.Integration
             // Normally userinterface will use cooker here
             userInterface = Substitute.For<IUserInterface>();
             // Userinterface dependency would then be added to cooker
-            cooker = new CookController(timer, display, powerTube, userInterface);
+            cooker.UI = userInterface;
 
         }
 

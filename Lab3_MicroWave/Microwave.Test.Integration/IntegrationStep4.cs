@@ -46,12 +46,13 @@ namespace Microwave.Test.Integration
             display = new Display(output);
 
             cooker = new CookController(timer, display, powerTube);
+
             userInterface = new UserInterface(
                 powerButton, timeButton, startCancelButton, door,
                 display, light,
                 cooker);
 
-            cooker = new CookController(timer, display, powerTube, userInterface);
+            cooker.UI = userInterface;
         }
 
         [Test]
@@ -62,6 +63,7 @@ namespace Microwave.Test.Integration
             startCancelButton.Press();
 
             output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("7 %")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
             output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("clear")));
             timer.Received(1).Start(60);
         }
@@ -94,6 +96,18 @@ namespace Microwave.Test.Integration
             timer.Received(1).Stop();
         }
 
+        [Test]
+        public void MicrowaveIsStarted_TimerExpires()
+        {
+            powerButton.Press();
+            timeButton.Press();
+            startCancelButton.Press();
+            timer.Expired += Raise.EventWith(this, EventArgs.Empty);
 
+            // Both the Light and the PowerTube is turned off 
+            output.Received(2).OutputLine(Arg.Is<string>(str => str.Contains("off")));
+            output.Received(2).OutputLine(Arg.Is<string>(str => str.Contains("clear")));
+            
+        }
     }
 }
