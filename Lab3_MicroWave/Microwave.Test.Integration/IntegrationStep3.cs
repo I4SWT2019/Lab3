@@ -8,6 +8,7 @@ using NUnit.Framework;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
+    [Author("I4SWTGrp2")]
     public class IntegrationStep3
     {
         private CookController cooker;
