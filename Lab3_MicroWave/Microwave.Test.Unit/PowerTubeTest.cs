@@ -22,7 +22,8 @@ namespace Microwave.Test.Unit
         [Test]
         public void TurnOn_WasOff_CorrectOutput()
         {
-            uut.TurnOn(50);
+            // Parameter changed from 50 to 350, 50% of 700 is 350
+            uut.TurnOn(350);
             output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50 %")));
         }
 
@@ -57,7 +58,8 @@ namespace Microwave.Test.Unit
         [Test]
         public void TurnOn_HighPower_ThrowsException()
         {
-            Assert.Throws<System.ArgumentOutOfRangeException>(() => uut.TurnOn(101));
+            // Parameter changed from 101 to 701, max power is 700. TurnOn isn't in percent
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => uut.TurnOn(701));
         }
 
         [Test]
