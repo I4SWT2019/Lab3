@@ -11,7 +11,7 @@ namespace Microwave.Test.Integration
     public class IntegrationStep2
     {
         private UserInterface userInterface;
-        private Light light;
+
         private Door door;
 
         private Button powerButton;
@@ -19,7 +19,8 @@ namespace Microwave.Test.Integration
         private Button startCancelButton;
 
 
-        private IDisplay display;
+        private Light light;
+        private Display display;
 
         private ICookController cooker;
 
@@ -30,7 +31,6 @@ namespace Microwave.Test.Integration
         {
             cooker = Substitute.For<ICookController>();
             output = Substitute.For<IOutput>();
-            display = Substitute.For<IDisplay>();
 
             powerButton = new Button();
             timeButton = new Button();
@@ -39,6 +39,7 @@ namespace Microwave.Test.Integration
             door = new Door();
 
             light = new Light(output);
+            display = new Display(output);
 
             userInterface = new UserInterface(
                 powerButton, timeButton, startCancelButton,
@@ -49,33 +50,60 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void OnPowerPressed_OnStartPressed__LightOff()
+        public void OnPowerPressedOnce_OutputContains50()
         {
             powerButton.Press();
-            startCancelButton.Press();
-
-            output.Received(1).OutputLine("Light is turned off");
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("50")));
         }
 
         [Test]
-        public void OnPowerPressed_OnTimePressed_OnStartPressed__LightOn()
+        public void OnPowerPressedTwice_OutputContains100()
+        {
+            powerButton.Press();
+            powerButton.Press();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("100")));
+        }
+
+        [Test]
+        public void OnPowerPressed_PowerExceeds700GoesTo50_OutputContains50()
+        {
+            for (int i = 50; i <= 750; i += 50)
+            {
+                powerButton.Press();
+            }
+
+            output.Received(2).OutputLine("Display shows: 50 W");
+        }
+
+        [Test]
+        public void OnTimePressedOnce_OutputContains0100()
+        {
+            powerButton.Press();
+            timeButton.Press();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
+        }
+
+        [Test]
+        public void OnTimePressedTwice_DisplayReceivedShowTime2_0()
+        {
+            powerButton.Press();
+            timeButton.Press();
+            timeButton.Press();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("02:00")));
+        }
+
+        [Test]
+        public void OnPowerPress_OnTimePressed_OnStartCancelPressed_LightOn_CookerStartCooking()
         {
             powerButton.Press();
             timeButton.Press();
             startCancelButton.Press();
 
-            output.Received(1).OutputLine("Light is turned on");
-        }
-
-        [Test]
-        public void OnPowerPressed_OnTimePressed_OnStartPressed_OnCancelPressed__LightOff()
-        {
-            powerButton.Press();
-            timeButton.Press();
-            startCancelButton.Press();
-            startCancelButton.Press();
-
-            output.Received(1).OutputLine("Light is turned off");
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("on")));
+            cooker.Received(1).StartCooking(Arg.Is(50), Arg.Is(60));
         }
     }
 }
