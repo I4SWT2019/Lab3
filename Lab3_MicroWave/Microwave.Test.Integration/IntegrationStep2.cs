@@ -106,5 +106,9 @@ namespace Microwave.Test.Integration
             output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("on")));
             cooker.Received(1).StartCooking(Arg.Is(50), Arg.Is(60));
         }
+
+        // PowerPressedStartpressed
+        // PowerPressedDoorOpen
+        // PowerPressedTimePressedDoorOpen
     }
 }
