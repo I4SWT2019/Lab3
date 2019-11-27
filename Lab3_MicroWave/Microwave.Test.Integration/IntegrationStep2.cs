@@ -107,8 +107,36 @@ namespace Microwave.Test.Integration
             cooker.Received(1).StartCooking(Arg.Is(50), Arg.Is(60));
         }
 
-        // PowerPressedStartPressed
-        // PowerPressedDoorOpen
-        // PowerPressedTimePressedDoorOpen
+
+        [Test]
+        public void OnPowerPressed_OnStartCancelPressed_ClearDisplay()
+        {
+            powerButton.Press();
+            startCancelButton.Press();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+        }
+
+
+        [Test]
+        public void OnPowerPressed_OnDoorOpened_ClearDisplay()
+        {
+            powerButton.Press();
+            door.Open();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+        }
+
+        [Test]
+        public void OnPowerPressed_OnTimePressed_OnDoorOpen_()
+        {
+            powerButton.Press();
+            timeButton.Press();
+            door.Open();
+
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+
+
+        }
     }
 }
