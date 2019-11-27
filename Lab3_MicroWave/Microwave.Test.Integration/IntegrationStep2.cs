@@ -107,7 +107,7 @@ namespace Microwave.Test.Integration
             cooker.Received(1).StartCooking(Arg.Is(50), Arg.Is(60));
         }
 
-        // PowerPressedStartpressed
+        // PowerPressedStartPressed
         // PowerPressedDoorOpen
         // PowerPressedTimePressedDoorOpen
     }
