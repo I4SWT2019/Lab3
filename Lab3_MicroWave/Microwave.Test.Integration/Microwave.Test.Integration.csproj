@@ -66,6 +66,7 @@
     <Compile Include="IntegrationStep3.cs" />
     <Compile Include="IntegrationStep4.cs" />
     <Compile Include="IntegrationStep5.cs" />
+    <Compile Include="IntegrationStep6.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
