@@ -11,6 +11,7 @@ namespace Microwave.Test.Integration
     [TestFixture]
     public class IntegrationStep6
     {
+        // Hvorfor er der 2 stringWriters?
         private StringWriter _sWriter;
 
         private Door door;
@@ -32,7 +33,7 @@ namespace Microwave.Test.Integration
         private StringWriter _sw;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
             timer = Substitute.For<ITimer>();
 
@@ -62,6 +63,8 @@ namespace Microwave.Test.Integration
         {
             Console.SetOut(_sw);
 
+            // Hvad er det _sw ikke modtager? Noget som helst?
+            // Hvad er formålet med testen? Du tester ikke rigtigt noget
             _sw.DidNotReceive();
         }
 
@@ -79,6 +82,8 @@ namespace Microwave.Test.Integration
             door.Open();
             door.Close();
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(9).WriteLine(Arg.Any<string>());
         }
 
@@ -93,6 +98,8 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             startCancelButton.Press();
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(4).WriteLine(Arg.Any<string>());
         }
 
@@ -108,6 +115,8 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             door.Open();
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(5).WriteLine(Arg.Any<string>());
         }
 
@@ -123,6 +132,8 @@ namespace Microwave.Test.Integration
             timeButton.Press();
             door.Open();
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(6).WriteLine(Arg.Any<string>());
         }
 
@@ -139,6 +150,8 @@ namespace Microwave.Test.Integration
             startCancelButton.Press();
             startCancelButton.Press();
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(10).WriteLine(Arg.Any<string>());
         }
 
@@ -156,6 +169,8 @@ namespace Microwave.Test.Integration
             door.Open();
 
 
+            // Der skal testes om den får de rigtige strenge
+            // Ellers testes der ikke om output konvertere sit input til det korrekte output
             _sw.Received(8).WriteLine(Arg.Any<string>());
         }
 
