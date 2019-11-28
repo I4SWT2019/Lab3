@@ -4,6 +4,7 @@ using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
 using NSubstitute;
+using NSubstitute.Routing.Handlers;
 using NUnit.Framework;
 
 namespace Microwave.Test.Integration
@@ -11,8 +12,6 @@ namespace Microwave.Test.Integration
     [TestFixture]
     public class IntegrationStep6
     {
-        // Hvorfor er der 2 stringWriters?
-        private StringWriter _sWriter;
 
         private Door door;
         private Button powerButton;
@@ -52,21 +51,12 @@ namespace Microwave.Test.Integration
             userInterface = new UserInterface(powerButton, timeButton, startCancelButton, 
                                 door, display, light, cooker);
 
+            cooker.UI =userInterface;
+
             _sw = Substitute.For<StringWriter>();
 
         }
 
-        //6 tests, 5 extensions and 1 UC based
-
-        [Test]
-        public void NotingPressed_DidNotReceiveInput_NothingWritten()
-        {
-            Console.SetOut(_sw);
-
-            // Hvad er det _sw ikke modtager? Noget som helst?
-            // Hvad er formålet med testen? Du tester ikke rigtigt noget
-            _sw.DidNotReceive();
-        }
 
         //UC 
         [Test]
@@ -79,12 +69,23 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             timeButton.Press();
             startCancelButton.Press();
+            timer.Expired += Raise.EventWith(this, EventArgs.Empty);
             door.Open();
             door.Close();
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(9).WriteLine(Arg.Any<string>());
+
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 01:00")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube works with 7 %")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube turned off")));
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(3).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
         }
 
         //Extension 1, start button pressed during Power setup
@@ -98,9 +99,10 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             startCancelButton.Press();
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(4).WriteLine(Arg.Any<string>());
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
         }
 
 
@@ -115,9 +117,11 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             door.Open();
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(5).WriteLine(Arg.Any<string>());
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
         }
 
         //Extension 2, door opened under time setup
@@ -132,9 +136,13 @@ namespace Microwave.Test.Integration
             timeButton.Press();
             door.Open();
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(6).WriteLine(Arg.Any<string>());
+
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 01:00")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
         }
 
         //Extension 3, StartStop button pressed during cooking.
@@ -150,9 +158,16 @@ namespace Microwave.Test.Integration
             startCancelButton.Press();
             startCancelButton.Press();
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(10).WriteLine(Arg.Any<string>());
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 01:00")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube works with 7 %")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube turned off")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
         }
 
         //Extension 4, door opened under time setup
@@ -169,9 +184,14 @@ namespace Microwave.Test.Integration
             door.Open();
 
 
-            // Der skal testes om den får de rigtige strenge
-            // Ellers testes der ikke om output konvertere sit input til det korrekte output
-            _sw.Received(8).WriteLine(Arg.Any<string>());
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned off")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 50 W")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display shows: 01:00")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _sw.Received(2).WriteLine(Arg.Is<string>(str => str.Contains("Light is turned on")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube works with 7 %")));
+            _sw.Received(1).WriteLine(Arg.Is<string>(str => str.Contains("PowerTube turned off")));
         }
 
 
