@@ -41,7 +41,7 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void StartCooking_OutputContains7percecnt_TimerReceived60()
+        public void StartCooking_OutputContains7Percent_TimerReceived60()
         {
             cooker.StartCooking(50,60);
 
@@ -59,7 +59,7 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void Stop_OutputContainsoff_TimerReceivedStop()
+        public void Stop_OutputContainsOff_TimerReceivedStop()
         {
             cooker.StartCooking(50,60);
             cooker.Stop();
