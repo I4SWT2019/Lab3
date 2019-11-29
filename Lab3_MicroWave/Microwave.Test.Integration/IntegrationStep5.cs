@@ -57,11 +57,17 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void StartCooking31Sec_Wait30Sec_DisplayShows0001()
+        public void StartCooking31Sec_Wait32Sec_DisplayShowsTimeDownTo0000()
         {
             cooker.StartCooking(50,31);
             System.Threading.Thread.Sleep(32000);
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:31")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:25")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:20")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:10")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:05")));
             output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:01")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:00")));
         }
     }
 }
