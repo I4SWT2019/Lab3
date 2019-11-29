@@ -60,7 +60,9 @@ namespace Microwave.Test.Integration
         public void StartCooking31Sec_Wait30Sec_DisplayShows0001()
         {
             cooker.StartCooking(50,31);
-            System.Threading.Thread.Sleep(30100);
+            System.Threading.Thread.Sleep(30200);
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:20")));
+            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:10")));
             output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:01")));
         }
     }
