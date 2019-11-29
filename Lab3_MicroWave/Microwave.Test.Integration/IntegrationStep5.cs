@@ -61,13 +61,13 @@ namespace Microwave.Test.Integration
         {
             cooker.StartCooking(50,31);
             System.Threading.Thread.Sleep(32000);
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:31")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:25")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:20")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:10")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:05")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:01")));
-            output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:00")));
+            for (int i = 30; i > 0; i--)
+            {
+                if( i >= 10)
+                    output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:" + i)));
+                else
+                    output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("00:0" + i)));
+            }
         }
     }
 }
